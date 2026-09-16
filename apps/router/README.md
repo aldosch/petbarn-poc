@@ -5,8 +5,10 @@ No framework, no compute.
 
 ### How it works
 
-- `rewrites` run on Vercel's edge router before any compute\
-- `firewall.mjs` runs on every deploy and upserts firewall rules.
+- [`rewrites`](https://vercel.com/docs/routing/rewrites) run on Vercel's edge
+  router before any compute\
+- [`firewall.mjs`](https://vercel.com/docs/vercel-firewall/firewall-api) runs on
+  every deploy and upserts firewall rules.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../../docs/routing-dark.svg">
@@ -27,7 +29,8 @@ No framework, no compute.
 
 ### Limits
 
-2048 total routes per deployment\
+2048 total routes per deployment ([documented
+limit](https://vercel.com/docs/routing/rewrites))\
 rewrites, redirects and headers each count as one\
 staging config uses 39
 
@@ -38,7 +41,7 @@ staging config uses 39
 - specific paths (graphql, checkout, m2 lane) come before the `/:path*`
   catch-all
 
-**(2) `x-vercel-enable-rewrite-caching: 0` header**
+**(2) [`x-vercel-enable-rewrite-caching: 0`](https://vercel.com/docs/routing/rewrites) header**
 
 - prevents response caching of proxied APIs at the router level
 
@@ -57,4 +60,6 @@ staging config uses 39
 - the staging pwa-frontend has Vercel Authentication on
   (`all_except_custom_domains`): a `_vercel_jwt` bypass cookie gets through
   (see `scripts/validate-routes.mjs`)
-- at cutover the fix is disabling Deployment Protection on backend projects
+- at cutover the fix is disabling
+  [Deployment Protection](https://vercel.com/docs/deployment-protection) on
+  backend projects

@@ -1,8 +1,11 @@
 # Mesh: GraphQL gateway with API-level protection
 
-GraphQL Mesh v1 gateway (Hive Gateway runtime) with a protection layer that
-covers what Cloudflare API Shield's GraphQL protection covers, natively in The
-Guild stack, and adds what it cannot do.
+[GraphQL Mesh v1](https://the-guild.dev/graphql/mesh/v1/getting-started)
+gateway ([Hive Gateway](https://the-guild.dev/graphql/hive/docs/gateway)
+runtime) with a protection layer that covers what Cloudflare API Shield's
+[GraphQL
+protection](https://developers.cloudflare.com/api-shield/security/graphql-protection/)
+covers, natively in The Guild stack, and adds what it cannot do.
 
 Purpose: automatic detection and blocking of abusive mutation-level traffic
 through payload analysis. This is the card-testing scenario: bursts of
@@ -20,21 +23,23 @@ tune).
 
 | Control | Implementation | Cloudflare equivalent | Default |
 | --- | --- | --- | --- |
-| Query depth limit | GraphQL Armor `maxDepth` (the same plugin Hive Gateway's own maxDepth uses) | Depth rules on GraphQL traffic | 10 (`MESH_MAX_DEPTH`) |
-| Document size limit | GraphQL Armor `maxTokens` (token count at parse time, rejects before validation) | Size limits on GraphQL traffic | 1000 (`MESH_MAX_TOKENS`) |
-| Weighted complexity ceiling | GraphQL Armor `costLimit` | Blocking of suspiciously large or complex queries | 5000 (`MESH_MAX_COST`) |
-| Mutation flood guard + identity lockout | Custom Envelop plugin (`useOperationGuard`): counts mutations per client IP over a sliding window; over the limit it blocks the operation and locks the identity out for the window, reads included | Mutation-level abuse detection (body-based) | 40 / 60s (`MESH_MUTATION_FLOOD_MAX`, `MESH_MUTATION_FLOOD_WINDOW_MS`) |
-| Per-field rate limits | Hive Gateway `useRateLimiting`: quotas on individual mutation fields keyed by `context.clientIp` | Not offered (Cloudflare keys on IP and path, not GraphQL fields) | `createCart` 5/min, `placeOrder` 5/min, cart-line mutations 30/min |
-| Alias abuse limit | GraphQL Armor `maxAliases` | Not offered | 15 (`MESH_MAX_ALIASES`) |
-| Schema-leak masking | GraphQL Armor `blockFieldSuggestions` ("Did you mean" suggestions hidden) | Not offered | on |
-| CSRF prevention | Gateway built-in (`csrfPrevention`): rejects form-style content types | none | on |
-| Error masking | Gateway built-in (`maskedErrors`): resolver internals never leave the function | none | on |
-| Weighted cost accounting | Gateway built-in `demandControl` (mutations carry a base cost of 10; add `@cost`/`@listSize` directives to model expensive fields) | Partial (static depth and size only) | maxCost 5000, listSize 100 |
-| Introspection control | Gateway built-in (`disableIntrospection`) | none | on, disable with `MESH_DISABLE_INTROSPECTION=true` |
+| Query depth limit | [GraphQL Armor `maxDepth`](https://escape.tech/graphql-armor/docs/plugins/max-depth) (the same plugin [Hive Gateway's own maxDepth](https://the-guild.dev/graphql/hive/docs/gateway/other-features/security/max-depth) uses) | Depth rules on GraphQL traffic | 10 (`MESH_MAX_DEPTH`) |
+| Document size limit | [GraphQL Armor `maxTokens`](https://escape.tech/graphql-armor/docs/plugins/max-tokens) (token count at parse time, rejects before validation) | Size limits on GraphQL traffic | 1000 (`MESH_MAX_TOKENS`) |
+| Weighted complexity ceiling | [GraphQL Armor `costLimit`](https://escape.tech/graphql-armor/docs/plugins/cost-limit) | Blocking of suspiciously large or complex queries | 5000 (`MESH_MAX_COST`) |
+| Mutation flood guard + identity lockout | [Custom Envelop plugin](https://the-guild.dev/graphql/envelop/docs/plugins/custom-plugin) (`useOperationGuard`): counts mutations per client IP over a sliding window; over the limit it blocks the operation and locks the identity out for the window, reads included | Mutation-level abuse detection (body-based) | 40 / 60s (`MESH_MUTATION_FLOOD_MAX`, `MESH_MUTATION_FLOOD_WINDOW_MS`) |
+| Per-field rate limits | Hive Gateway [`useRateLimiting`](https://the-guild.dev/graphql/hive/docs/gateway/other-features/security/rate-limiting): quotas on individual mutation fields keyed by `context.clientIp` | Not offered (Cloudflare keys on IP and path, not GraphQL fields) | `createCart` 5/min, `placeOrder` 5/min, cart-line mutations 30/min |
+| Alias abuse limit | [GraphQL Armor `maxAliases`](https://escape.tech/graphql-armor/docs/plugins/max-aliases) | Not offered | 15 (`MESH_MAX_ALIASES`) |
+| Schema-leak masking | [GraphQL Armor `blockFieldSuggestions`](https://escape.tech/graphql-armor/docs/plugins/block-field-suggestions) ("Did you mean" suggestions hidden) | Not offered | on |
+| CSRF prevention | Gateway built-in ([`csrfPrevention`](https://the-guild.dev/graphql/hive/docs/gateway/other-features/security/csrf-prevention)): rejects form-style content types | none | on |
+| Error masking | Gateway built-in ([`maskedErrors`](https://the-guild.dev/graphql/hive/docs/gateway/other-features/security), security overview): resolver internals never leave the function | none | on |
+| Weighted cost accounting | Gateway built-in [`demandControl`](https://the-guild.dev/graphql/hive/docs/gateway/other-features/security/demand-control) (mutations carry a base cost of 10; add `@cost`/`@listSize` directives to model expensive fields) | Partial (static depth and size only) | maxCost 5000, listSize 100 |
+| Introspection control | Gateway built-in ([`disableIntrospection`](https://the-guild.dev/graphql/hive/docs/gateway/other-features/security/disable-introspection)) | none | on, disable with `MESH_DISABLE_INTROSPECTION=true` |
 
 ### What this layer does that Cloudflare's GraphQL protection cannot
 
-Cloudflare's feature only parses POST bodies under 20 KB with
+Cloudflare's
+[feature](https://developers.cloudflare.com/api-shield/security/graphql-protection/)
+only parses POST bodies under 20 KB with
 `application/json` or `application/graphql` content types, on paths ending in
 `/graphql`, and does not support fragments or multiple operations. Real GraphQL
 clients (Apollo, the Guild toolkit) use fragments heavily, so a large share of
@@ -46,11 +51,12 @@ client" is not expressible in API Shield.
 
 ### Layered with Vercel Firewall
 
-- **Vercel Firewall (edge):** JA4-fingerprint and IP rate limits, bot
-  protection and challenge mode stop volumetric or distributed attacks before
-  they consume compute. The gateway sees one invocation per request either
-  way; the edge is the cheap place to absorb volume, and JA4 is only visible
-  there.
+- **[Vercel Firewall](https://vercel.com/docs/vercel-firewall) (edge):**
+  JA4-fingerprint and IP rate limits, bot protection and challenge mode stop
+  volumetric or distributed attacks before they consume compute. The gateway
+  sees one invocation per request either way; the edge is the cheap place to
+  absorb volume, and [JA4 is only visible
+  there](https://vercel.com/docs/vercel-firewall/firewall-concepts).
 - **Gateway (this layer):** GraphQL-aware controls. The edge cannot parse
   GraphQL semantics.
 
@@ -110,13 +116,15 @@ Enterprise terms.
   across instances.
 - **Observability:** one structured JSON log line per request and per block
   (`graphql.protection_config` on cold start, `graphql.operation`,
-  `graphql.flood_blocked`), visible in Vercel logs and any log drain. Blocked
+  `graphql.flood_blocked`), visible in
+  [Vercel logs](https://vercel.com/docs/logs) and any log drain. Blocked
   requests surface as GraphQL errors: flood-guard blocks carry the
   `GRAPHQL_MUTATION_FLOOD_BLOCKED` extension code; field-quota blocks return a
   `Rate limit of "Type.field" exceeded` message. Status codes are 400
   (flood and parse-time blocks) or 200 with errors (resolver-level quotas);
   hard 429s at the network edge remain the Firewall's job.
-- **Persisted documents** (only pre-registered operation hashes execute,
+- **[Persisted documents](https://the-guild.dev/graphql/hive/docs/gateway/persisted-documents)** (only
+  pre-registered operation hashes execute,
   `persistedDocuments` gateway option) are the recommended end state for
   production. Not enabled here: the clients would need their operations
   extracted into a registry first.

@@ -17,13 +17,18 @@ M2 lane on Adobe Commerce Cloud.
 ## What it demonstrates
 
 1. **Routing parity.** The pwa allow-list, checkout dictionary redirects,
-   per-app routes and the M2 lane recreated as static rewrites (39/2,048 routes).
+   per-app routes and the M2 lane recreated as [static
+   rewrites](https://vercel.com/docs/routing/rewrites) (39/2,048 routes).
 2. **GraphQL protection.** The mesh covers what Cloudflare API Shield's GraphQL
-   protection covers, natively in the Guild stack, and adds what it cannot do
-   (depth, tokens, aliases, cost, mutation flood guard, per-field rate limits).
-   See [apps/mesh/README.md](apps/mesh/README.md).
-3. **Centralized security.** Firewall rules on the router protect every proxied
-   backend, applied at build time. Log-only first, `MODE=enforce` at cutover.
+   protection covers, natively in the Guild stack
+   ([Hive Gateway security](https://the-guild.dev/graphql/hive/docs/gateway/other-features/security)),
+   and adds what it cannot do (depth, tokens, aliases, cost, mutation flood
+   guard, per-field rate limits). See
+   [apps/mesh/README.md](apps/mesh/README.md).
+3. **Centralized security.** [Firewall
+   rules](https://vercel.com/docs/vercel-firewall/vercel-waf/custom-rules) on
+   the router protect every proxied backend, applied at build time. Log-only
+   first, `MODE=enforce` at cutover.
 
 ## Validation
 
@@ -34,7 +39,10 @@ pnpm --filter @poc/mesh test:security
 
 ## Deployment
 
-Two Vercel projects, push-to-deploy from `main`:
+Two Vercel projects, push-to-deploy from `main` (the mesh follows The Guild's
+[Deploy Mesh on
+Vercel](https://the-guild.dev/graphql/mesh/docs/getting-started/deploy-mesh-gateway)
+guide):
 
 | Project              | Root          | Domain            | Serves               |
 | -------------------- | ------------- | ----------------- | -------------------- |
