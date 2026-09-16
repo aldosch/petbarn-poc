@@ -1,0 +1,176 @@
+schema
+    @link(url: "https://specs.apollo.dev/link/v1.0")
+    @link(url: "https://specs.apollo.dev/join/v0.3", for: EXECUTION)
+    
+    
+    
+    
+    
+    
+    @link(url: "https://the-guild.dev/graphql/mesh/spec/v1.0", import: ["@merge"]) 
+  {
+    query: Query
+    
+    
+  }
+
+  
+    directive @join__enumValue(graph: join__Graph!) repeatable on ENUM_VALUE
+
+    directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+    
+      directive @join__field(
+        graph: join__Graph
+        requires: join__FieldSet
+        provides: join__FieldSet
+        type: String
+        external: Boolean
+        override: String
+        usedOverridden: Boolean
+        
+        
+      ) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+    
+    
+
+    directive @join__implements(
+      graph: join__Graph!
+      interface: String!
+    ) repeatable on OBJECT | INTERFACE
+
+    directive @join__type(
+      graph: join__Graph!
+      key: join__FieldSet
+      extension: Boolean! = false
+      resolvable: Boolean! = true
+      isInterfaceObject: Boolean! = false
+    ) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+    directive @join__unionMember(
+      graph: join__Graph!
+      member: String!
+    ) repeatable on UNION
+
+    scalar join__FieldSet
+    
+  
+  
+  directive @link(
+    url: String
+    as: String
+    for: link__Purpose
+    import: [link__Import]
+  ) repeatable on SCHEMA
+
+  scalar link__Import
+
+  enum link__Purpose {
+    """
+    `SECURITY` features provide metadata necessary to securely resolve fields.
+    """
+    SECURITY
+
+    """
+    `EXECUTION` features provide metadata necessary for operation execution.
+    """
+    EXECUTION
+  }
+
+  
+  
+  
+  
+  
+  
+  
+enum join__Graph {
+  COUNTRIES @join__graph(name: "Countries", url: "https://countries.trevorblades.com/graphql") 
+}
+
+directive @merge(
+  subgraph: String
+  argsExpr: String
+  keyArg: String
+  keyField: String
+  key: [String!]
+  additionalArgs: String
+) repeatable on FIELD_DEFINITION
+
+scalar TransportOptions @join__type(graph: COUNTRIES) 
+
+type Continent @join__type(graph: COUNTRIES, key: "code")  {
+  code: ID!
+  countries: [Country!]!
+  name: String!
+}
+
+type Country @join__type(graph: COUNTRIES, key: "code")  {
+  code: ID!
+  awsRegion: String!
+  capital: String
+  continent: Continent!
+  currencies: [String!]!
+  currency: String
+  emoji: String!
+  emojiU: String!
+  languages: [Language!]!
+  name(lang: String) : String!
+  native: String!
+  phone: String!
+  phones: [String!]!
+  states: [State!]!
+  subdivisions: [Subdivision!]!
+}
+
+type Language @join__type(graph: COUNTRIES, key: "code")  {
+  code: ID!
+  countries: [Country!]!
+  name: String!
+  native: String!
+  rtl: Boolean!
+}
+
+type Query @join__type(graph: COUNTRIES)  {
+  continent(code: ID!) : Continent @merge(subgraph: "Countries", keyField: "code", keyArg: "code") 
+  continents(filter: ContinentFilterInput = {}) : [Continent!]!
+  countries(filter: CountryFilterInput = {}) : [Country!]!
+  country(code: ID!) : Country @merge(subgraph: "Countries", keyField: "code", keyArg: "code") 
+  language(code: ID!) : Language @merge(subgraph: "Countries", keyField: "code", keyArg: "code") 
+  languages(filter: LanguageFilterInput = {}) : [Language!]!
+}
+
+type State @join__type(graph: COUNTRIES)  {
+  code: String
+  country: Country!
+  name: String!
+}
+
+type Subdivision @join__type(graph: COUNTRIES)  {
+  code: ID!
+  emoji: String
+  name: String!
+}
+
+input ContinentFilterInput @join__type(graph: COUNTRIES)  {
+  code: StringQueryOperatorInput
+}
+
+input CountryFilterInput @join__type(graph: COUNTRIES)  {
+  code: StringQueryOperatorInput
+  continent: StringQueryOperatorInput
+  currency: StringQueryOperatorInput
+  name: StringQueryOperatorInput
+}
+
+input LanguageFilterInput @join__type(graph: COUNTRIES)  {
+  code: StringQueryOperatorInput
+}
+
+input StringQueryOperatorInput @join__type(graph: COUNTRIES)  {
+  eq: String
+  in: [String!]
+  ne: String
+  nin: [String!]
+  regex: String
+}

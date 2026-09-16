@@ -1,0 +1,79 @@
+# Directories
+User-agent: *
+Disallow: /app/
+Disallow: /bin/
+Disallow: /dev/
+Disallow: /lib/
+Disallow: /phpserver/
+Disallow: /setup/
+Disallow: /update/
+Disallow: /var/
+Disallow: /vendor/
+Disallow: /downloader/
+Disallow: /includes/
+Disallow: /lib/
+Disallow: /pkginfo/
+Disallow: /var/
+Disallow: /tag/
+Disallow: /control/
+Disallow: /install/
+Disallow: /private/
+Disallow: /index.php/
+Disallow: /catalog/product_compare/
+Disallow: /catalog/category/view/
+Disallow: /catalog/product/view/
+Disallow: /catalogsearch/
+Disallow: /search/
+Disallow: /search
+Disallow: /checkout/
+Disallow: /control/
+Disallow: /contacts/
+Disallow: /customer/
+Disallow: /customize/
+Disallow: /newsletter/
+Disallow: /wishlist/
+Disallow: /sendafriend/
+Disallow: /cron.php
+Disallow: /cron.sh
+Disallow: .*/wp-login.php.*
+Disallow: /*navigationTop=*
+Disallow: /*order=*
+Disallow: /*dir=*
+Disallow: /*userId=*
+Disallow: /*gclid=*
+Disallow: /*/feed/
+# Do not index the general technical directories and files on a server
+Disallow: /cgi-bin/
+# Files
+Disallow: /composer.json
+Disallow: /composer.lock
+Disallow: /CONTRIBUTING.md
+Disallow: /COPYING.txt
+Disallow: /LICENSE.txt
+Disallow: /LICENSE_AFL.txt
+Disallow: /nginx.conf.sample
+Disallow: /package.json
+Disallow: /php.ini.sample
+Disallow: /RELEASE_NOTES.txt
+Disallow: /media/pdf/Petbarn_Grooming_Pricelist_Apr22.pdf
+# Do not index the link from the session ID
+Disallow: /*.php$
+Disallow: /*?SID=
+# CVS, SVN directory and dump files
+Disallow: /*.CVS
+Disallow: /*.Zip$
+Disallow: /*.Svn$
+Disallow: /*.Idea$
+Disallow: /*.Sql$
+Disallow: /*.Tgz$
+# Block specific URL parameters
+Disallow: /*?*bvstate=
+Disallow: /*?*intcmp=
+# Website Sitemap
+Sitemap: https://www.petbarn.com.au/media/sitemap/au/sitemap.xml
+#Block Yandex (RU)
+User-agent: Yandex
+Disallow: /
+#Block Amazon Bots
+User-agent: Amazonbot
+Disallow: /

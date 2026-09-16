@@ -1,0 +1,7 @@
+{
+  "name": "@poc/router",
+  "private": true,
+  "scripts": {
+    "build": "node firewall.mjs"
+  }
+}

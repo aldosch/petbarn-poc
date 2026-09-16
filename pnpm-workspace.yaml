@@ -1,0 +1,11 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+allowBuilds:
+  '@apollo/protobufjs': true
+  '@tailwindcss/oxide': true
+  esbuild: true
+  fsevents: true
+  protobufjs: false
+  sharp: true
+  unrs-resolver: true

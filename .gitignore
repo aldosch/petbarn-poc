@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+.next/
+dist/
+.turbo/
+tsconfig.tsbuildinfo
+supergraph.graphql.bak
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel/
+
+# OS / editor
+.DS_Store
+*.log

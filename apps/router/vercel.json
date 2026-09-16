@@ -1,0 +1,59 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/checkout", "destination": "/checkout/cart", "permanent": true },
+    { "source": "/checkout/payment", "destination": "/checkout/cart", "permanent": true },
+    { "source": "/grooming", "destination": "/petbarn-grooming", "permanent": true },
+    { "source": "/faq", "destination": "/frequently-asked-questions", "permanent": true },
+    { "source": "/services/petcloud", "destination": "/", "permanent": true },
+    { "source": "/services/foundation", "destination": "/services/pet-foundation", "permanent": true },
+    { "source": "/brand/hills-science-diet", "destination": "/brand/science-diet", "permanent": true },
+    { "source": "/brand/leaps-&-bounds", "destination": "/brand/leaps-and-bounds", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/graphql", "destination": "https://petbarn-poc-mesh.vercel.app/api/graphql" },
+    { "source": "/api/graphql", "destination": "https://petbarn-poc-mesh.vercel.app/api/graphql" },
+
+    { "source": "/", "destination": "https://petbarn-pwa-frontend-staging.vercel.app/" },
+    { "source": "/p/:path*", "destination": "https://petbarn-pwa-frontend-staging.vercel.app/p/:path*" },
+    { "source": "/c/:path*", "destination": "https://petbarn-pwa-frontend-staging.vercel.app/c/:path*" },
+    { "source": "/catalogsearch/:path*", "destination": "https://petbarn-pwa-frontend-staging.vercel.app/catalogsearch/:path*" },
+    { "source": "/checkout/onepage/success/:path*", "destination": "https://petbarn-pwa-frontend-staging.vercel.app/checkout/onepage/success/:path*" },
+    { "source": "/checkout/onepage/success", "destination": "https://petbarn-pwa-frontend-staging.vercel.app/checkout/onepage/success" },
+    { "source": "/customer/account/edit/:path*", "destination": "https://petbarn-pwa-frontend-staging.vercel.app/customer/account/edit/:path*" },
+    { "source": "/customer/account/edit", "destination": "https://petbarn-pwa-frontend-staging.vercel.app/customer/account/edit" },
+    { "source": "/api/:path*", "destination": "https://petbarn-pwa-frontend-staging.vercel.app/api/:path*" },
+
+    { "source": "/checkout/:path*", "destination": "https://petbarn-git-staging-greencross.vercel.app/checkout/:path*" },
+
+    { "source": "/petai_static/:path*", "destination": "https://pet-ai-chat-staging.vercel.app/petai_static/:path*" },
+    { "source": "/petai-chat/:path*", "destination": "https://pet-ai-chat-staging.vercel.app/petai-chat/:path*" },
+    { "source": "/petai-chat", "destination": "https://pet-ai-chat-staging.vercel.app/petai-chat" },
+    { "source": "/petwatch/api/:path*", "destination": "https://petwatch-git-staging-greencross.vercel.app/petwatch/api/:path*" },
+    { "source": "/petwatch/:path*", "destination": "https://petwatch-git-staging-greencross.vercel.app/petwatch/:path*" },
+    { "source": "/petwatch", "destination": "https://petwatch-git-staging-greencross.vercel.app/petwatch" },
+    { "source": "/consent_centre_static/:path*", "destination": "https://consent-centre-staging.vercel.app/consent_centre_static/:path*" },
+    { "source": "/consent-centre/:path*", "destination": "https://consent-centre-staging.vercel.app/consent-centre/:path*" },
+    { "source": "/shop-repeat-delivery/:path*", "destination": "https://repeat-delivery-admin-staging.vercel.app/shop-repeat-delivery/:path*" },
+
+    { "source": "/media/:path*", "destination": "https://mcstaging.petbarn.com.au/media/:path*" },
+    { "source": "/static/:path*", "destination": "https://mcstaging.petbarn.com.au/static/:path*" },
+    { "source": "/skin/:path*", "destination": "https://mcstaging.petbarn.com.au/skin/:path*" },
+    { "source": "/index.php/rest/:path*", "destination": "https://mcstaging.petbarn.com.au/index.php/rest/:path*" },
+    { "source": "/rest/:path*", "destination": "https://mcstaging.petbarn.com.au/rest/:path*" },
+    { "source": "/rest", "destination": "https://mcstaging.petbarn.com.au/rest" },
+    { "source": "/customer/:path*", "destination": "https://mcstaging.petbarn.com.au/customer/:path*" },
+
+    { "source": "/:path*", "destination": "https://petbarn-pwa-frontend-staging.vercel.app/:path*" }
+  ],
+  "headers": [
+    {
+      "source": "/(api|graphql)/(.*)",
+      "headers": [{ "key": "x-vercel-enable-rewrite-caching", "value": "0" }]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [{ "key": "strict-transport-security", "value": "max-age=31536000; includeSubDomains" }]
+    }
+  ]
+}

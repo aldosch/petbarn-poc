@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mesh — GraphQL API</title>
+    <style>
+      body {
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        background: #0a0a0a;
+        color: #ededed;
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 4rem 1.5rem;
+      }
+      a {
+        color: #50e3c2;
+      }
+      code {
+        color: #50e3c2;
+        font-size: 0.85rem;
+      }
+      li {
+        padding: 0.5rem 1rem;
+        border: 1px solid #222;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: baseline;
+        list-style: none;
+      }
+      .note {
+        color: #888;
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>GraphQL Mesh API</h1>
+    <p class="note">
+      Hive Gateway runtime serving the Countries subgraph plus ecommerce types. Playground at
+      <a href="/api/graphql">/api/graphql</a>.
+    </p>
+    <ul>
+      <li><code>products(collection: String)</code><span class="note">query — catalog for the storefront</span></li>
+      <li><code>product(handle: String!)</code><span class="note">query — product detail page</span></li>
+      <li><code>collections</code><span class="note">query — navigation</span></li>
+      <li><code>cart(id: ID!)</code><span class="note">query — cart state for storefront + checkout</span></li>
+      <li><code>storeLocations</code><span class="note">query — aggregated with the Countries subgraph</span></li>
+      <li><code>createCart / addToCart / updateCartLine / removeCartLine</code><span class="note">mutations — cart lifecycle</span></li>
+      <li><code>placeOrder(cartId: ID!, email: String!)</code><span class="note">mutation — checkout</span></li>
+      <li><code>countries / country(code: ID!)</code><span class="note">query — Countries subgraph (the getting-started source)</span></li>
+    </ul>
+  </body>
+</html>

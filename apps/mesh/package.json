@@ -1,0 +1,25 @@
+{
+  "name": "@poc/mesh",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env.local dev.mjs",
+    "build": "node scripts/check.mjs",
+    "generate": "mkdir -p lib/generated && mesh-compose -o lib/generated/supergraph.graphql && node scripts/supergraph-to-mjs.mjs",
+    "start": "node dev.mjs",
+    "test:security": "node scripts/abuse-test.mjs"
+  },
+  "dependencies": {
+    "@escape.tech/graphql-armor-block-field-suggestions": "^3.0.1",
+    "@escape.tech/graphql-armor-cost-limit": "^2.4.3",
+    "@escape.tech/graphql-armor-max-aliases": "^2.6.2",
+    "@escape.tech/graphql-armor-max-depth": "^2.4.2",
+    "@escape.tech/graphql-armor-max-tokens": "^2.5.1",
+    "@graphql-hive/gateway": "^2.14.1",
+    "@graphql-mesh/transport-http": "^1.2.1",
+    "graphql": "^16.11.0"
+  },
+  "devDependencies": {
+    "@graphql-mesh/compose-cli": "^1.8.2"
+  }
+}
